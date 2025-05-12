@@ -27,9 +27,9 @@ pub fn invert_tree(root: Option<Node>) -> Option<Node> {
     while let Some(item) = stack.pop() {
         if let Some(n) = item {
             let TreeNode { left, right, .. } = &mut *n.borrow_mut();
-            mem::swap(right, left);
             stack.push(right.clone());
             stack.push(left.clone());
+            mem::swap(right, left);
         }
     }
     root
