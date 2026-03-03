@@ -137,6 +137,7 @@ mod minimum_recolors_to_get_k_consecutive_black_blocks;
 mod minimum_remove_to_make_valid_parentheses;
 mod minimum_rounds_to_complete_all_tasks;
 mod minimum_string_length_after_removing_substrings;
+mod minimum_swaps_to_arrange_a_binary_grid;
 mod minimum_time_difference;
 mod most_beautiful_item_for_each_query;
 mod move_pieces_to_obtain_string;

@@ -315,6 +315,7 @@ programming challenges completed in other languages.
 - [Ones and Zeroes](https://leetcode.com/problems/ones-and-zeroes)
 - [Check if a String Contains All Binary Codes of Size K](https://leetcode.com/problems/check-if-a-string-contains-all-binary-codes-of-size-k)
 - [Number of Steps to Reduce a Number in Binary Representation to One](https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/)
+- [Minimum Swaps to Arrange a Binary Grid](https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid)
 
 #### Hard
 
