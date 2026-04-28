@@ -1,32 +1,56 @@
-fn add(u: usize, i: i32) -> Option<usize> {
-    if i.is_negative() {
-        u.checked_sub(i.wrapping_abs() as u32 as usize)
-    } else {
-        u.checked_add(i as usize)
-    }
-}
-
-pub fn convert(s: String, n: i32) -> String {
-    if n == 1 || n as usize >= s.len() {
-        return s;
-    }
-
-    let mut rows = vec![String::new(); n as usize];
-
-    let mut row_index = 0;
-    let mut step = 1;
-    for c in s.chars() {
-        rows[row_index].push(c);
-        if row_index == 0 {
-            step = 1;
-        } else if row_index == n as usize - 1 {
-            step = -1;
+pub fn convert(s: String, num_rows: i32) -> String {
+    let num_rows = num_rows as usize;
+    // We know the final len of the string so there will be no reallocation or wasted memory
+    let mut o = String::with_capacity(s.len());
+    let step = match num_rows {
+        1 => 1,
+        num_rows => num_rows * 2 - 2,
+    };
+    // Append the top row
+    {
+        let mut i = 0;
+        loop {
+            if let Some(c) = s.as_bytes().get(i * step).copied() {
+                o.push(char::from(c));
+            } else {
+                break;
+            }
+            i += 1;
         }
-
-        row_index = add(row_index, step).unwrap();
     }
-
-    rows.join("")
+    // Append middle rows
+    for row in 1..num_rows - 1 {
+        let start_0 = row;
+        let start_1 = num_rows * 2 - 2 - row;
+        let mut i = 0;
+        loop {
+            if let Some(c) = s.as_bytes().get(start_0 + i * step).copied() {
+                o.push(char::from(c));
+            } else {
+                break;
+            }
+            if let Some(c) = s.as_bytes().get(start_1 + i * step).copied() {
+                o.push(char::from(c));
+            } else {
+                break;
+            }
+            i += 1;
+        }
+    }
+    // Append the last row
+    if num_rows > 1 {
+        let start = num_rows - 1;
+        let mut i = 0;
+        loop {
+            if let Some(c) = s.as_bytes().get(start + i * step).copied() {
+                o.push(char::from(c));
+            } else {
+                break;
+            }
+            i += 1;
+        }
+    }
+    o
 }
 
 #[cfg(test)]
@@ -43,6 +67,8 @@ mod tests {
         assert_eq!(
             "PINALSIGYAHRPI".to_string(),
             convert("PAYPALISHIRING".to_string(), 4)
-        )
+        );
+
+        assert_eq!("A".to_string(), convert("A".to_string(), 1));
     }
 }
