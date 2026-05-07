@@ -1,55 +1,41 @@
 pub fn convert(s: String, num_rows: i32) -> String {
+    fn append(o: &mut String, bytes: &[u8], start: usize, step: usize) {
+        let mut i = 0;
+        while let Some(&c) = bytes.get(start + i * step) {
+            o.push(c as char);
+            i += 1;
+        }
+    }
+
     let num_rows = num_rows as usize;
-    // We know the final len of the string so there will be no reallocation or wasted memory
-    let mut o = String::with_capacity(s.len());
+    let bytes = s.as_bytes();
     let step = match num_rows {
         1 => 1,
-        num_rows => num_rows * 2 - 2,
+        n => n * 2 - 2,
     };
-    // Append the top row
-    {
+    let mut o = String::with_capacity(s.len());
+
+    // Top row
+    append(&mut o, bytes, 0, step);
+
+    // Middle rows
+    for row in 1..num_rows.saturating_sub(1) {
         let mut i = 0;
-        loop {
-            if let Some(c) = s.as_bytes().get(i * step).copied() {
-                o.push(char::from(c));
-            } else {
-                break;
+        while let Some(&a) = bytes.get(row + i * step) {
+            o.push(a as char);
+            match bytes.get((step - row) + i * step).copied() {
+                Some(b) => o.push(b as char),
+                None => break,
             }
             i += 1;
         }
     }
-    // Append middle rows
-    for row in 1..num_rows - 1 {
-        let start_0 = row;
-        let start_1 = num_rows * 2 - 2 - row;
-        let mut i = 0;
-        loop {
-            if let Some(c) = s.as_bytes().get(start_0 + i * step).copied() {
-                o.push(char::from(c));
-            } else {
-                break;
-            }
-            if let Some(c) = s.as_bytes().get(start_1 + i * step).copied() {
-                o.push(char::from(c));
-            } else {
-                break;
-            }
-            i += 1;
-        }
-    }
-    // Append the last row
+
+    // Bottom row
     if num_rows > 1 {
-        let start = num_rows - 1;
-        let mut i = 0;
-        loop {
-            if let Some(c) = s.as_bytes().get(start + i * step).copied() {
-                o.push(char::from(c));
-            } else {
-                break;
-            }
-            i += 1;
-        }
+        append(&mut o, bytes, num_rows - 1, step);
     }
+
     o
 }
 
